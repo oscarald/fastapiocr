@@ -1,8 +1,8 @@
 import pdf2image
 import PyPDF2
+import os
 
-
-def image_conversion(inpath, image_path, paginas):
+def image_conversion(inpath, image_path, paginas, uuid):
     print("Converting to image")
     OUTPUT_FOLDER = image_path
     FIRST_PAGE = 1
@@ -19,8 +19,10 @@ def image_conversion(inpath, image_path, paginas):
                                              userpw=USERPWD,
                                              use_cropbox=USE_CROPBOX,
                                              strict=STRICT)
-    for image in pil_images:
-        image.save(image_path + 'image_converted.jpg')
+    for i, image in enumerate(pil_images):
+        image_name = f'{uuid}-{i+1}.jpg'
+        # print(image_name)
+        image.save(os.path.join(image_path, image_name))
 
 
 def contar_paginas_pdf(ruta_pdf):

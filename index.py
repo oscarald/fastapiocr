@@ -62,22 +62,23 @@ async def create_file(file: UploadFile = File(...)):
     content = await file.read()
     f.write(content)
     extension = os.path.splitext(nombreArchivo)[1]
-
+    paginas = 1
     if extension == '.pdf':
         paginas = contar_paginas_pdf(f'{dir_path}/uploads/{nombreArchivo}')
-        print(paginas)
         image_conversion(f'{dir_path}/uploads/{nombreArchivo}',
-                         f'{dir_path}/pdf/', paginas)
+                         f'{dir_path}/pdf/', paginas, nombreuuid)
     nombrePdf = f'{dir_path}/pdf/{str(uuid.uuid4())}.pdf'
     print('NOMBRE ARCHIVO',nombreArchivo)
-    transform_ocr(f'{dir_path}/pdf/image_converted.jpg', nombrePdf)
+    print("PAGINAS: ", paginas)
+    # transform_ocr(f'{dir_path}/pdf/image_converted.jpg', nombrePdf, nombreuuid, paginas)
+    transform_ocr(f'{dir_path}/pdf/', nombrePdf, nombreuuid, paginas)
     print('CREATINGGGGGGGGGGGGG', nombrePdf)
-    pdf = open(nombrePdf, 'rb')
-    pdfRead = pdf.read()
-    pdfBAse64 = binascii.b2a_base64(pdfRead, newline=False).decode('utf-8')
+    # pdf = open(nombrePdf, 'rb')
+    # pdfRead = pdf.read()
+    # pdfBAse64 = binascii.b2a_base64(pdfRead, newline=False).decode('utf-8')
     return {
         'finalizado': True,
         'mensaje': 'OK',
-        'datos': pdfBAse64
+        'datos': nombrePdf
     }
 
