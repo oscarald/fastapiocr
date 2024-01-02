@@ -1,0 +1,9 @@
+# Entornos virtuales
+venv/
+env/
+*.pyc
+*.pyo
+__pycache__/
+
+# Archivos generados por pip
+pip-log.txt
