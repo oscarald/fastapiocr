@@ -5,5 +5,8 @@ env/
 *.pyo
 __pycache__/
 
+output/
+pdf/
+uploads/
 # Archivos generados por pip
 pip-log.txt

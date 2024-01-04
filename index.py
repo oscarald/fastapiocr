@@ -50,12 +50,19 @@ async def read_file(file: UploadFile = File(...)):
 async def create_file(file: UploadFile = File(...)):
     dir_path = os.path.dirname(os.path.realpath(__file__))
 
-    existeUploads = os.path.exists('{dir_path}/uploads/')
-    nombreuuid = uuid.uuid4()
-    print (nombreuuid)
-    if existeUploads:
-        os.mkdir(f'{dir_path}/uploads/')
+    existeUploads = os.path.join(dir_path, 'uploads')
+    if not os.path.exists(existeUploads):
+        os.makedirs(existeUploads)
 
+    existeOutput = os.path.join(dir_path, 'output')
+    if not os.path.exists(existeOutput):
+        os.makedirs(existeOutput)
+
+    existePdf = os.path.join(dir_path, 'pdf')
+    if not os.path.exists(existePdf):
+        os.makedirs(existePdf)
+    
+    nombreuuid = uuid.uuid4()
     nombreArchivo = f'{nombreuuid}-{file.filename}'
 
     f = open(f'{dir_path}/uploads/{nombreArchivo}', 'wb')
@@ -67,7 +74,9 @@ async def create_file(file: UploadFile = File(...)):
         paginas = contar_paginas_pdf(f'{dir_path}/uploads/{nombreArchivo}')
         image_conversion(f'{dir_path}/uploads/{nombreArchivo}',
                          f'{dir_path}/pdf/', paginas, nombreuuid)
-    nombrePdf = f'{dir_path}/pdf/{str(uuid.uuid4())}.pdf'
+    uuidConvertido = uuid.uuid4()
+
+    nombrePdf = f'{dir_path}/output/{uuidConvertido}.pdf'
     print('NOMBRE ARCHIVO',nombreArchivo)
     print("PAGINAS: ", paginas)
     # transform_ocr(f'{dir_path}/pdf/image_converted.jpg', nombrePdf, nombreuuid, paginas)
@@ -79,6 +88,5 @@ async def create_file(file: UploadFile = File(...)):
     return {
         'finalizado': True,
         'mensaje': 'OK',
-        'datos': nombrePdf
+        'datos': f'{uuidConvertido}.pdf'
     }
-
